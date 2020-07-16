@@ -1,0 +1,16 @@
+
+TO START: 
+1. Navigate to the directory you want to put this project into on the command line/ or terminal
+2. on the command line copy this command: git clone https://github.com/As2angara/A2_EECS2011
+
+AFTER MAKING CHANGES: copy these commands
+
+1. git add .
+ 
+2. git status 
+(NOTE: this step is optional, this checks the files you've added to staging)
+
+3. git commit -m "PUT A MESSAGE HERE"
+(NOTE: inside the quotation marks put a message of what you completed for example: "Completed the implementation of the LinkedList")
+
+4. git push origin master
