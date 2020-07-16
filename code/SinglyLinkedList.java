@@ -74,9 +74,17 @@ public class SinglyLinkedList<E>{
 	  
 	  public void addLast(E element)
 	  {
-		tail = new Node<E>(element,tail);
+             Node<E> n = new Node<E>(element,null);
 		if(isEmpty())
-			head = tail;
+		{
+			head = n;
+			tail = n;
+		}
+		else 
+		{
+			tail.setNext(n);
+			tail = n;
+		}
 		size++;
 	  }
 	  
@@ -87,7 +95,10 @@ public class SinglyLinkedList<E>{
 
 		   E temp = head.getElement();
 		   head = head.getNext();
-		   
+		   size--;
+                 if(size == 0)
+                    tail = null;
+
 		   return temp;
 	  }
 
