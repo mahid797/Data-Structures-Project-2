@@ -22,13 +22,70 @@ public class QueueSimulator{
   }
   
   public QueueSimulator(double aR, double servT, double simT){
+	  this.arrivalRate = aR;
+	  this.serviceTime = servT;
+	  this.totalSimTime = simT;
   }
   
   public double calcAverageWaitingTime(){
+	  Data time = new Data();
+	  double totalWait = 0.0;
+	  int size = eventQueue.size();
+	  
+	  while(!eventQueue.isEmpty()) {
+		  time = eventQueue.dequeue();
+		  totalWait = totalWait + (time.getArrivalTime() - time.getDepartureTime());
+	  }
+	  
+	  double avgTime = totalWait/size;
+	  
+	  return avgTime;
   }
   
+  
   public double runSimulation(){
+	  Data packet = new Data();
+	  Data oldPacket = new Data();
+	  timeForNextArrival = getRandTime(arrivalRate);
+	  while (currTime >= totalSimTime) {
+		  
+		  //currTime = timeForNextArrival;
+		  timeForNextDeparture = timeForNextArrival + serviceTime;
+		  timeForNextArrival = getRandTime(arrivalRate);
+		  
+		  if (buffer.isEmpty()) {
+			  e = Event.ARRIVAL;
+		  }
+		  else if (timeForNextArrival < timeForNextDeparture) {
+			  e = Event.ARRIVAL;
+		  }
+		  else {
+			  e = Event.DEPARTURE;
+		  }
+		  
+		  switch(e) {
+		  case ARRIVAL:
+			  packet.setArrivalTime(currTime);
+			  buffer.enqueue(packet);
+			  //currTime = timeForNextArrival;
+			  break;
+			  
+		  case DEPARTURE:
+			  oldPacket = buffer.dequeue();
+			  oldPacket.setDepartureTime(currTime);
+			  eventQueue.enqueue(oldPacket);
+			  //currTime = timeForNextDeparture;
+			  break;
+		  }
+		  
+	  }
+	  
+	  double sojournTime = calcAverageWaitingTime();
+	  return sojournTime;
   }
+
+  
+  
 }
 
 
