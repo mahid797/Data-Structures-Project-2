@@ -47,7 +47,7 @@ public class QueueSimulator{
 	  Data packet = new Data();
 	  Data oldPacket = new Data();
 	  timeForNextArrival = getRandTime(arrivalRate);
-	  while (currTime >= totalSimTime) {
+	  while (currTime <= totalSimTime) {
 		  
 		  //currTime = timeForNextArrival;
 		  timeForNextDeparture = timeForNextArrival + serviceTime;
