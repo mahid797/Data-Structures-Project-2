@@ -31,15 +31,29 @@ public class QueueSimulator{
 	  Data packet = new Data();
 	  double totalWait = 0.0;
 	  int size = eventQueue.size();
-	  
+	 
+	  //Dequeue the first packet, and retrieve the previous time
+	  packet = eventQueue.dequeue();
+	  totalWait += packet.getDepartureTime();
+	  double previous = packet.getDepartureTime();
+ 
 	  while(!eventQueue.isEmpty()) {
+		  packet = new Data();
+
+		  //Dequeue a new packet, and increment the total wait time appropriately
 		  packet = eventQueue.dequeue();
-		  totalWait = totalWait + (packet.getArrivalTime() - packet.getDepartureTime());
+	          totalWait += (packet.getDepartureTime() - previous);
+		  
+		  //Set a new previous time for the next iteration
+        	  previous = packet.getDepartureTime();
+
 	  }
 	  
-	  double avgTime = totalWait/size;
-	  
-	  return avgTime;
+	  double arrTime = size/totalWait;
+          double num = arrTime/(1/serviceTime);
+          double sojourn = (1/arrTime)*(num + (0.5*Math.pow(num, 2))/(1-num));
+
+          return sojourn;	  
   }
   
   
@@ -85,7 +99,8 @@ public class QueueSimulator{
                         eventQueue.enqueue(packet);
 
                         //Set the current time to the departure time
-                        currTime = timeForNextDeparture;  
+                        currTime = timeForNextDeparture; 
+			break; 
 		}
 		  
 	  }
