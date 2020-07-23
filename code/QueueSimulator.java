@@ -1,3 +1,9 @@
+//EECS 2011 - SU2020
+//Group Members:
+// Adrian Angara 216090532
+// Nadimul Hasan 216429516
+// Mahid Ahmad 216652398
+
 import java.lang.*;
 
 
@@ -51,7 +57,7 @@ public class QueueSimulator{
 	  
 	  double arrTime = size/totalWait;
           double num = arrTime/(1/serviceTime);
-          double sojourn = (1/arrTime)*(num + (0.5*Math.pow(num, 2))/(1-num));
+          double sojourn = (1/arrTime)*(num + (0.5*Math.pow(num, 2))/Math.abs(1-num));
 
           return sojourn;	  
   }
