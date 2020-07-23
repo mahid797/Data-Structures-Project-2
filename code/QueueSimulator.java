@@ -28,13 +28,13 @@ public class QueueSimulator{
   }
   
   public double calcAverageWaitingTime(){
-	  Data time = new Data();
+	  Data packet = new Data();
 	  double totalWait = 0.0;
 	  int size = eventQueue.size();
 	  
 	  while(!eventQueue.isEmpty()) {
-		  time = eventQueue.dequeue();
-		  totalWait = totalWait + (time.getArrivalTime() - time.getDepartureTime());
+		  packet = eventQueue.dequeue();
+		  totalWait = totalWait + (packet.getArrivalTime() - packet.getDepartureTime());
 	  }
 	  
 	  double avgTime = totalWait/size;
@@ -44,15 +44,13 @@ public class QueueSimulator{
   
   
   public double runSimulation(){
-	  Data packet = new Data();
-	  Data oldPacket = new Data();
-	  timeForNextArrival = getRandTime(arrivalRate);
+	  Data packet;
+	  
 	  while (currTime <= totalSimTime) {
-		  
-		  //currTime = timeForNextArrival;
-		  timeForNextDeparture = timeForNextArrival + serviceTime;
-		  timeForNextArrival = getRandTime(arrivalRate);
-		  
+		  packet = new Data();		  
+
+
+		  //Determine the event to occur
 		  if (buffer.isEmpty()) {
 			  e = Event.ARRIVAL;
 		  }
@@ -65,18 +63,30 @@ public class QueueSimulator{
 		  
 		  switch(e) {
 		  case ARRIVAL:
-			  packet.setArrivalTime(currTime);
-			  buffer.enqueue(packet);
-			  //currTime = timeForNextArrival;
-			  break;
-			  
+			//Define the Data object to be enqueued
+                        timeForNextArrival += getRandTime(arrivalRate);
+                        packet.setArrivalTime(timeForNextArrival);
+
+                        //Enqueue the Data object
+                        buffer.enqueue(packet);
+
+                        //Set the current time to the arrival time
+                        currTime = timeForNextArrival;
+			break;
+
+
 		  case DEPARTURE:
-			  oldPacket = buffer.dequeue();
-			  oldPacket.setDepartureTime(currTime);
-			  eventQueue.enqueue(oldPacket);
-			  //currTime = timeForNextDeparture;
-			  break;
-		  }
+			//Get a departure time
+                        timeForNextDeparture = buffer.first().getArrivalTime() + serviceTime;
+
+                        //Dequeue the first Data Node, set its departure time, and enqueue into the event queue
+                        packet = buffer.dequeue();
+                        packet.setDepartureTime(timeForNextDeparture);
+                        eventQueue.enqueue(packet);
+
+                        //Set the current time to the departure time
+                        currTime = timeForNextDeparture;  
+		}
 		  
 	  }
 	  
